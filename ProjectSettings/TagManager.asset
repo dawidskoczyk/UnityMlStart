@@ -6,6 +6,7 @@ TagManager:
   tags:
   - target
   - ground
+  - agent
   layers:
   - Default
   - TransparentFX
