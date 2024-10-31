@@ -100,7 +100,7 @@ ConfigurableJoint:
   m_Anchor: {x: 0, y: 0.17, z: 0}
   m_Axis: {x: -1, y: 0, z: 0}
   m_AutoConfigureConnectedAnchor: 0
-  m_ConnectedAnchor: {x: 0.00000004470348, y: -0.16, z: 0}
+  m_ConnectedAnchor: {x: -0.000001862645, y: -0.16, z: 0}
   serializedVersion: 3
   m_SecondaryAxis: {x: 0, y: 0, z: -1}
   m_XMotion: 0
@@ -1050,7 +1050,7 @@ MonoBehaviour:
   m_Model: {fileID: 0}
   m_InferenceDevice: 2
   m_BehaviorType: 0
-  m_BehaviorName: Sprinter
+  m_BehaviorName: Walker
   TeamId: 0
   m_UseChildSensors: 1
   m_UseChildActuators: 1
@@ -3087,7 +3087,7 @@ Transform:
   - {fileID: 8762652659378633038}
   - {fileID: 2591259007332440500}
   m_Father: {fileID: 0}
-  m_RootOrder: 3
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &3495642748057765075
 GameObject:
@@ -4610,7 +4610,7 @@ ConfigurableJoint:
   m_Anchor: {x: 0, y: 0.03, z: 0}
   m_Axis: {x: 1, y: 0, z: 0}
   m_AutoConfigureConnectedAnchor: 0
-  m_ConnectedAnchor: {x: 0.00000004470348, y: -0.168, z: 0}
+  m_ConnectedAnchor: {x: -0.000001862645, y: -0.168, z: 0}
   serializedVersion: 3
   m_SecondaryAxis: {x: 0, y: 1, z: 0}
   m_XMotion: 0
@@ -5929,9 +5929,9 @@ ConfigurableJoint:
   m_Anchor: {x: 0, y: 0.17, z: 0}
   m_Axis: {x: -1, y: 0, z: 0}
   m_AutoConfigureConnectedAnchor: 0
-  m_ConnectedAnchor: {x: -0.00000004470348, y: -0.16, z: 0}
+  m_ConnectedAnchor: {x: 0.000001862645, y: -0.16, z: 0}
   serializedVersion: 3
-  m_SecondaryAxis: {x: 0, y: 1, z: -1}
+  m_SecondaryAxis: {x: 0, y: 0, z: -1}
   m_XMotion: 0
   m_YMotion: 0
   m_ZMotion: 0
@@ -6132,7 +6132,7 @@ ConfigurableJoint:
   m_Anchor: {x: 0, y: 0.03, z: 0}
   m_Axis: {x: 1, y: 0, z: 0}
   m_AutoConfigureConnectedAnchor: 0
-  m_ConnectedAnchor: {x: -0.00000004470348, y: -0.168, z: 0}
+  m_ConnectedAnchor: {x: 0.000001862645, y: -0.168, z: 0}
   serializedVersion: 3
   m_SecondaryAxis: {x: 0, y: 1, z: 0}
   m_XMotion: 0
