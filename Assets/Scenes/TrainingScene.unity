@@ -1169,6 +1169,16 @@ PrefabInstance:
       propertyPath: m_Name
       value: TrainingArea
       objectReference: {fileID: 0}
+    - target: {fileID: 8347606401158137981, guid: 401ac4f1afb6fab4d94201f0f137a1fb,
+        type: 3}
+      propertyPath: m_TargetWalkingSpeed
+      value: 5.04
+      objectReference: {fileID: 0}
+    - target: {fileID: 8347606401158137981, guid: 401ac4f1afb6fab4d94201f0f137a1fb,
+        type: 3}
+      propertyPath: randomizeWalkSpeedEachEpisode
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
