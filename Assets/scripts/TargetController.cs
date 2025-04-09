@@ -76,7 +76,6 @@ public class TargetController : MonoBehaviour
     {
         if (col.transform.CompareTag(tagToDetect))
         {
-            onCollisionEnterEvent.Invoke(col);
             if (respawnIfTouched)
             {
                 MoveTargetToRandomPosition();

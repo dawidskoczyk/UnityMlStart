@@ -4,17 +4,17 @@ using UnityEngine;
 
 public class OrientationCubeController : MonoBehaviour
 {
-    //Update position and Rotation
+    //Aktualizacja pozycji i rotacji
     public void UpdateOrientation(Transform rootBP, Transform target)
     {
         var dirVector = target.position - transform.position;
-        dirVector.y = 0; //flatten dir on the y. this will only work on level, uneven surfaces
+        dirVector.y = 0; //wyzerowanie kierunku na osi Y. Zadzia³a tylko na równych, p³askich powierzchniach.
         var lookRot =
             dirVector == Vector3.zero
                 ? Quaternion.identity
-                : Quaternion.LookRotation(dirVector); //get our look rot to the target
+                : Quaternion.LookRotation(dirVector); //ustawia rotacjê w kierunku celu
 
-        //UPDATE ORIENTATION CUBE POS & ROT
+        //Aktualizacji pozycji i rotacji szeœcianu orientacji
         transform.SetPositionAndRotation(rootBP.position, lookRot);
     }
 }

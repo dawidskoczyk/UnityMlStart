@@ -64,7 +64,7 @@ public class WalkerAgent : Agent
         m_OrientationCube = GetComponentInChildren<OrientationCubeController>();
         m_DirectionIndicator = GetComponentInChildren<DirectionIndicator>();
 
-        //Setup each body part
+        //Ustawienie ka¿dej czêœci cia³a 
         m_JdController = GetComponent<JointDriveController>();
         m_JdController.SetupBodyPart(hips);
         m_JdController.SetupBodyPart(chest);
@@ -91,18 +91,18 @@ public class WalkerAgent : Agent
     /// </summary>
     public override void OnEpisodeBegin()
     {
-        //Reset all of the body parts
+        //Reset wszystkich czêœci cia³a
         foreach (var bodyPart in m_JdController.bodyPartsDict.Values)
         {
             bodyPart.Reset(bodyPart);
         }
 
-        //Random start rotation to help generalize
+        //losowa startowa rotacja, ¿eby lepiej generalizowaæ
         hips.rotation = Quaternion.Euler(0, Random.Range(0.0f, 360.0f), 0);
 
         UpdateOrientationObjects();
 
-        //Set our goal walking speed
+        //Ustawienie docelowej prêdkoœci poruszania
         MTargetWalkingSpeed =
             randomizeWalkSpeedEachEpisode ? Random.Range(0.1f, m_maxWalkingSpeed) : MTargetWalkingSpeed;
     }
@@ -112,15 +112,15 @@ public class WalkerAgent : Agent
     /// </summary>
     public void CollectObservationBodyPart(BodyPart bp, VectorSensor sensor)
     {
-        //GROUND CHECK
-        sensor.AddObservation(bp.groundContact.touchingGround); // Is this bp touching the ground
+        //sprawdzenie kontaktu z ziemi¹
+        sensor.AddObservation(bp.groundContact.touchingGround); // Czy ta czêœæ cia³a dotyka ziemi
 
-        //Get velocities in the context of our orientation cube's space
-        //Note: You can get these velocities in world space as well but it may not train as well.
+        // pobranie prêdkoœci w kontekœcie przestrzeni szeœcianu orientacyjnego
+        // uwaga: Mo¿na pobraæ te prêdkoœci w przestrzeni œwiata, ale mo¿e to nie trenowaæ dostatecznie dobrze.
         sensor.AddObservation(m_OrientationCube.transform.InverseTransformDirection(bp.rb.velocity));
         sensor.AddObservation(m_OrientationCube.transform.InverseTransformDirection(bp.rb.angularVelocity));
 
-        //Get position relative to hips in the context of our orientation cube's space
+        // pobranie pozycjê w odniesieniu do bioder w kontekœcie przestrzeni  szeœcianu orientacyjnego
         sensor.AddObservation(m_OrientationCube.transform.InverseTransformDirection(bp.rb.position - hips.position));
 
         if (bp.rb.transform != hips && bp.rb.transform != handL && bp.rb.transform != handR)
@@ -130,31 +130,34 @@ public class WalkerAgent : Agent
         }
     }
 
+
     /// <summary>
     /// Loop over body parts to add them to observation.
     /// </summary>
     public override void CollectObservations(VectorSensor sensor)
     {
+        // kierunek, w którym wskazuje szeœcian
         var cubeForward = m_OrientationCube.transform.forward;
 
-        //velocity we want to match
+        // prêdkoœæ, któr¹ chcemy dopasowaæ
         var velGoal = cubeForward * MTargetWalkingSpeed;
-        //ragdoll's avg vel
+        // œrednia prêdkoœæ ragdolla
         var avgVel = GetAvgVelocity();
 
-        //current ragdoll velocity. normalized
+        // bie¿¹ca prêdkoœæ ragdolla. znormalizowana
         sensor.AddObservation(Vector3.Distance(velGoal, avgVel));
-        //avg body vel relative to cube
+        // œrednia prêdkoœæ cia³a w odniesieniu do szeœcianu orientacji
         sensor.AddObservation(m_OrientationCube.transform.InverseTransformDirection(avgVel));
-        //vel goal relative to cube
+        // docelowa prêdkoœæ w odniesieniu do szeœcianu orientacji
         sensor.AddObservation(m_OrientationCube.transform.InverseTransformDirection(velGoal));
 
-        //rotation deltas
+        // zmiany w rotacji
         sensor.AddObservation(Quaternion.FromToRotation(hips.forward, cubeForward));
         sensor.AddObservation(Quaternion.FromToRotation(head.forward, cubeForward));
 
-        //Position of target position relative to cube
+        // pozycja docelowa w odniesieniu do szeœcianu orientacji
         sensor.AddObservation(m_OrientationCube.transform.InverseTransformPoint(target.transform.position));
+
 
         foreach (var bodyPart in m_JdController.bodyPartsList)
         {
@@ -185,7 +188,7 @@ public class WalkerAgent : Agent
         bpDict[forearmR].SetJointTargetRotation(continuousActions[++i], 0, 0);
         bpDict[head].SetJointTargetRotation(continuousActions[++i], continuousActions[++i], 0);
 
-        //update joint strength settings
+        //aktualizacja ustawieñ si³ jointów
         bpDict[chest].SetJointStrength(continuousActions[++i]);
         bpDict[spine].SetJointStrength(continuousActions[++i]);
         bpDict[head].SetJointStrength(continuousActions[++i]);
@@ -218,34 +221,35 @@ public class WalkerAgent : Agent
 
         var cubeForward = m_OrientationCube.transform.forward;
 
-        // Set reward for this step according to mixture of the following elements.
-        // a. Match target speed
-        //This reward will approach 1 if it matches perfectly and approach zero as it deviates
+        // Ustalanie nagrody za ten krok na podstawie nastêpuj¹cych elementów.
+        // a. Dopasowanie do docelowej prêdkoœci
+        // Ta nagroda bêdzie zbli¿aæ siê do 1, jeœli prêdkoœæ bêdzie idealnie dopasowana, 
+        // i zbli¿aæ siê do zera, jeœli bêdzie siê ró¿niæ.
         var matchSpeedReward = GetMatchingVelocityReward(cubeForward * MTargetWalkingSpeed, GetAvgVelocity());
 
-        //Check for NaNs
+        // Sprawdzenie wartoœci NaN
         if (float.IsNaN(matchSpeedReward))
         {
             throw new ArgumentException(
-                "NaN in moveTowardsTargetReward.\n" +
+                "NaN w moveTowardsTargetReward.\n" +
                 $" cubeForward: {cubeForward}\n" +
                 $" hips.velocity: {m_JdController.bodyPartsDict[hips].rb.velocity}\n" +
                 $" maximumWalkingSpeed: {m_maxWalkingSpeed}"
             );
         }
 
-        // b. Rotation alignment with target direction.
-        //This reward will approach 1 if it faces the target direction perfectly and approach zero as it deviates
+        // b. Wyrównanie rotacji wzglêdem docelowego kierunku.
+        // Ta nagroda bêdzie zbli¿aæ siê do 1, jeœli agent idealnie skieruje siê w stronê celu, 
+        // i zbli¿aæ siê do zera, jeœli bêdzie odchylony.
         var headForward = head.forward;
         headForward.y = 0;
-        // var lookAtTargetReward = (Vector3.Dot(cubeForward, head.forward) + 1) * .5F;
         var lookAtTargetReward = (Vector3.Dot(cubeForward, headForward) + 1) * .5F;
 
-        //Check for NaNs
+        // Sprawdzenie wartoœci NaN
         if (float.IsNaN(lookAtTargetReward))
         {
             throw new ArgumentException(
-                "NaN in lookAtTargetReward.\n" +
+                "NaN w lookAtTargetReward.\n" +
                 $" cubeForward: {cubeForward}\n" +
                 $" head.forward: {head.forward}"
             );
@@ -253,6 +257,7 @@ public class WalkerAgent : Agent
 
         AddReward(matchSpeedReward * lookAtTargetReward);
     }
+
 
     //Returns the average velocity of all of the body parts
     //Using the velocity of the hips only has shown to result in more erratic movement from the limbs, so...

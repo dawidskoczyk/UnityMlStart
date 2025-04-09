@@ -127,7 +127,7 @@ using UnityEngine.Serialization;
             };
             bp.rb.maxAngularVelocity = k_MaxAngularVelocity;
 
-            // Add & setup the ground contact script
+            // Dodaj i ustaw skrypt kontakty z ziemi¹
             bp.groundContact = t.GetComponent<GroundContact>();
             if (!bp.groundContact)
             {
